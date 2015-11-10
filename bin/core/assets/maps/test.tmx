@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="30" tilewidth="16" tileheight="16" nextobjectid="81">
+ <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" spacing="1" margin="1" tilecount="480">
+  <image source="tiles.png" width="343" height="410"/>
+  <tile id="8">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="9">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="28">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="29">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="33">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="36">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="53">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="56">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="76">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="84">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="85">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="86">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="104">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="105">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="106">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="124">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="125">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="126">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="141">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="142">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="143">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="144">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="145">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="146">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="161">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="162">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="163">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="164">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="165">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="166">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="176">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="177">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="180">
+   <properties>
+    <property name="WaterFrame" value="1"/>
+   </properties>
+  </tile>
+  <tile id="196">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+  <tile id="197">
+   <properties>
+    <property name="blocked" value=""/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="35" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt00EOwUAUxvFuJT2FsHABicYJCLXBEQRnwBlwjHZDYoOFDUtxJJ9Ek5fJm85TnWqli99mTGf+OlPPcRyXCDPkKryCtBzhJHB5k8w9G1p03Xc4CEQtkrmPhC1ZK1uK2dIGX2AHE8be8Jzu/3Pf9KtF8k00NS0tw3N5bKF75q2lz5znwHILt6cv3DNShRoRd3fpvPqH+0jfAz3PQNMSKPNM76noLR3oEnFnROf1LLSkdXf/veWqabklXK/yJa4lzbVKekMYwTjjcc4UZjCHBmFj3NSygCWslDVsjJta1rCBrbKGjfFoT/r7r+9o2cJ7Ap8KChI=
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1">
+  <object id="3" gid="195" x="7" y="63" width="16" height="16"/>
+  <object id="7" gid="195" x="24" y="63" width="16" height="16"/>
+  <object id="8" gid="195" x="41" y="63" width="16" height="16"/>
+  <object id="9" gid="195" x="58" y="63" width="16" height="16"/>
+  <object id="10" gid="195" x="9" y="142" width="16" height="16"/>
+  <object id="11" gid="195" x="25" y="142" width="16" height="16"/>
+  <object id="12" gid="195" x="43" y="142" width="16" height="16"/>
+  <object id="13" gid="195" x="542" y="148" width="16" height="16"/>
+  <object id="14" gid="195" x="526" y="148" width="16" height="16"/>
+  <object id="15" gid="195" x="510" y="148" width="16" height="16"/>
+  <object id="16" gid="114" x="1" y="208" width="16" height="16"/>
+  <object id="17" gid="78" x="1" y="208" width="16" height="16"/>
+  <object id="18" gid="79" x="17" y="208" width="16" height="16"/>
+  <object id="19" gid="79" x="32" y="207" width="32" height="16"/>
+  <object id="20" gid="79" x="65" y="207" width="16" height="16"/>
+  <object id="21" gid="80" x="82" y="207" width="16" height="16"/>
+  <object id="22" gid="60" x="81" y="191" width="16" height="16"/>
+  <object id="23" gid="60" x="81" y="177" width="16" height="16"/>
+  <object id="24" gid="60" x="80" y="163" width="16" height="16"/>
+  <object id="25" gid="60" x="80" y="146" width="16" height="16"/>
+  <object id="26" gid="79" x="96" y="145" width="16" height="16"/>
+  <object id="27" gid="79" x="113" y="144" width="16" height="16"/>
+  <object id="28" gid="79" x="128" y="144" width="16" height="16"/>
+  <object id="29" gid="79" x="144" y="144" width="16" height="16"/>
+  <object id="30" gid="79" x="161" y="144" width="16" height="16"/>
+  <object id="31" gid="79" x="176" y="144" width="16" height="16"/>
+  <object id="32" gid="79" x="192" y="144" width="16" height="16"/>
+  <object id="33" gid="79" x="207.621" y="143.821" width="16" height="16"/>
+  <object id="34" gid="79" x="223.743" y="143.821" width="16" height="16"/>
+  <object id="35" gid="79" x="349.891" y="145.433" width="16" height="16"/>
+  <object id="36" gid="79" x="366.819" y="144.224" width="16" height="16"/>
+  <object id="37" gid="79" x="383.343" y="144.627" width="16" height="16"/>
+  <object id="38" gid="79" x="399.464" y="144.224" width="16" height="16"/>
+  <object id="39" gid="79" x="415.988" y="143.821" width="16" height="16"/>
+  <object id="40" gid="79" x="432.11" y="143.821" width="16" height="16"/>
+  <object id="41" gid="79" x="447.828" y="144.224" width="16" height="16"/>
+  <object id="42" gid="58" x="464.755" y="143.821" width="16" height="16"/>
+  <object id="43" gid="58" x="465.158" y="159.943" width="16" height="16"/>
+  <object id="44" gid="58" x="465.158" y="175.661" width="16" height="16"/>
+  <object id="45" gid="58" x="464.755" y="191.782" width="16" height="16"/>
+  <object id="46" gid="78" x="465.158" y="208.306" width="16" height="16"/>
+  <object id="47" gid="79" x="480.876" y="208.306" width="16" height="16"/>
+  <object id="48" gid="79" x="496.998" y="207.5" width="16" height="16"/>
+  <object id="49" gid="79" x="513.119" y="207.5" width="16" height="16"/>
+  <object id="50" gid="79" x="529.24" y="208.306" width="16" height="16"/>
+  <object id="51" gid="79" x="545.361" y="207.903" width="16" height="16"/>
+  <object id="52" gid="54" x="238.655" y="159.54" width="16" height="16"/>
+  <object id="53" gid="54" x="239.864" y="159.54" width="16" height="16"/>
+  <object id="68" gid="13" x="31.5019" y="376.398" width="16" height="16"/>
+  <object id="70" gid="13" x="265.079" y="477.729" width="16" height="16"/>
+  <object id="71" gid="13" x="536.44" y="357.506" width="16" height="16"/>
+  <object id="72" gid="13" x="33.2194" y="98.1675" width="16" height="16"/>
+  <object id="73" gid="13" x="514.112" y="100.744" width="16" height="16"/>
+ </objectgroup>
+</map>
