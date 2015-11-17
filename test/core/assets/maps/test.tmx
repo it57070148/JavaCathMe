@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="30" tilewidth="16" tileheight="16" nextobjectid="189">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="35" height="30" tilewidth="16" tileheight="16" nextobjectid="192">
  <tileset firstgid="1" name="tiles" tilewidth="16" tileheight="16" spacing="1" margin="1" tilecount="480">
   <image source="tiles.png" width="343" height="410"/>
   <tile id="8">
@@ -188,7 +188,7 @@
    eJzt00EOwUAUxvFuJT2FsHABicYJCLXBEQRnwBlwjHZDYoOFDUtxJJ9Ek5fJm85TnWqli99mTGf+OlPPcRyXCDPkKryCtBzhJHB5k8w9G1p03Xc4CEQtkrmPhC1ZK1uK2dIGX2AHE8be8Jzu/3Pf9KtF8k00NS0tw3N5bKF75q2lz5znwHILt6cv3DNShRoRd3fpvPqH+0jfAz3PQNMSKPNM76noLR3oEnFnROf1LLSkdXf/veWqabklXK/yJa4lzbVKekMYwTjjcc4UZjCHBmFj3NSygCWslDVsjJta1rCBrbKGjfFoT/r7r+9o2cJ7Ap8KChI=
   </data>
  </layer>
- <objectgroup name="obj">
+ <objectgroup name="obj" visible="0">
   <object id="107" gid="199" x="0" y="209" width="98" height="16"/>
   <object id="109" gid="199" x="88" y="193" width="16" height="57"/>
   <object id="110" gid="199" x="102" y="152" width="139" height="16"/>
@@ -239,5 +239,9 @@
   <object id="163" x="340" y="389" width="41" height="40"/>
   <object id="164" x="434" y="383" width="43" height="45"/>
   <object id="177" x="148" y="386" width="42" height="43"/>
+ </objectgroup>
+ <objectgroup name="Catch">
+  <object id="189" gid="95" x="289" y="192" width="16" height="16"/>
+  <object id="190" gid="254" x="288" y="208" width="16" height="16"/>
  </objectgroup>
 </map>

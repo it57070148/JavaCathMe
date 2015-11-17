@@ -3,6 +3,7 @@ package com.mygdx.game.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygdx.game.Game;
+import com.mygdx.game.MainGame;
 import com.mygdx.game.MyGdxGame;
 
 public class DesktopLauncher {
@@ -19,6 +20,6 @@ public class DesktopLauncher {
 		// config.backgroundFPS = 60;
 		// config.foregroundFPS = 60;
 		// Launch Application
-		new LwjglApplication(new MyGdxGame(), config);
+		new LwjglApplication(new MainGame(), config);
 	}
 }

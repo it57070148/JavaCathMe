@@ -12,15 +12,16 @@ public class John extends Texture{
 	Task run;
 	SpriteBatch batch;
 	
-	public int rWidth = 16;
-	public int rHeight = 16;
+	public int rWidth = 12;
+	public int rHeight = 12;
 	
+	int chkPic = 0;
 	int x, y;
 	
-	public John() {
+	public John(int x, int y) {
 		super("pika.png");
-		x = 0;
-		y = 0;
+		this.x = x;
+		this.y = y;
 	}
 	
 	public John(SpriteBatch batch) {
@@ -63,36 +64,131 @@ public class John extends Texture{
 	
 	public void chrRight(boolean isInvi) {
 		if(isInvi){
-			super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Invi_r.png"), null, false));
-		}
+			if(chkPic >10){
+				if(chkPic > 20){
+					chkPic = 0;
+				}
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/invi_RightStand.png"), null, false));
+			}
+			else{
+				chkPic++;
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/invi_RightT1.png"), null, false));
+			}
+			chkPic++;
+			;}		
 		else{
-		super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("right.png"), null, false));;}
-		
+			if(chkPic >10){
+				if(chkPic > 20){
+					chkPic = 0;
+				}
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/RightStand.png"), null, false));
+			}
+			else{
+				chkPic++;
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/RightT1.png"), null, false));
+			}
+			chkPic++;
+			;}
 	}
+	
 	
 	public void chrLeft(boolean isInvi) {
 		if(isInvi){
-			super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Invi_l.png"), null, false));
-		}
-		else{			super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("left.png"), null, false));;}
-		}
+			if(chkPic >10){
+				if(chkPic > 20){
+					chkPic = 0;
+				}
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/invi_LeftStand.png"), null, false));
+			}
+			else{
+				chkPic++;
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/invi_LeftT1.png"), null, false));
+			}
+			chkPic++;
+			;}
+
+		
+		else{
+			if(chkPic >10){
+				if(chkPic > 20){
+					chkPic = 0;
+				}
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/LeftStand.png"), null, false));
+			}
+			else{
+				chkPic++;
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/LeftT1.png"), null, false));
+			}
+			chkPic++;
+			;}
+	}
 
 	public void chrUp(boolean isInvi) {
 		if(isInvi){
-			super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Invi_u.png"), null, false));
-		}
+			if(chkPic >10){
+				if(chkPic > 20){
+					chkPic = 0;
+				}
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/invi_upT1.png"), null, false));
+			}
+			else{
+				chkPic++;
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/invi_upT2.png"), null, false));
+			}
+			chkPic++;
+			;}		
 		else{
 		
-		super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("up.png"), null, false));;}
+			if(chkPic >10){
+				if(chkPic > 20){
+					chkPic = 0;
+				}
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/upT1.png"), null, false));
+			}
+			else{
+				chkPic++;
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/upT2.png"), null, false));
+			}
+			chkPic++;
+			;}
 	}
 	public void chrDown(boolean isInvi) {
 		if(isInvi){
-			super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Invi_d.png"), null, false));
-		}
+			if(chkPic >10){
+				if(chkPic > 20){
+					chkPic = 0;
+				}
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/invi_1downT.png"), null, false));
+			}
+			else{
+				chkPic++;
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/invi_2downT.png"), null, false));
+			}
+			chkPic++;
+			;}
+		
 		else{
 		
-		super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("down.png"), null, false));;}
+			if(chkPic >10){
+				if(chkPic > 20){
+					chkPic = 0;
+				}
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/1downT.png"), null, false));
+			}
+			else{
+				chkPic++;
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("theif/2downT.png"), null, false));
+			}
+			chkPic++;
+			;}
 	}
+	public void chrCatch() {
+		
+		
+		
+		super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("dead.png"), null, false));;
+	}
+	
 	public John run() {
 		run = Timer.schedule(new Task(){
 		    @Override
