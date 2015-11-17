@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -39,6 +40,9 @@ public class HomeStage extends Stage {
 		// TODO Auto-generated method stub
 		texture = new Texture(Gdx.files.internal("Menu/Menu.png"));
 		sprite = new Sprite(texture);
+		Music mainMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/Menu.mp3"));
+		mainMusic.play();
+		mainMusic.setLooping(true);
 	}
 
 	@Override
@@ -72,6 +76,7 @@ public class HomeStage extends Stage {
 			}
 		
 		System.out.println(mouse.toString());
+		
 	}
 
 	@Override

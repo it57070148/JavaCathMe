@@ -19,6 +19,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.charactor.John;
+import com.mygdx.charactor.Police;
 
 public class PlayStage extends Stage implements InputProcessor {
 	
@@ -28,7 +29,7 @@ public class PlayStage extends Stage implements InputProcessor {
     TiledMapRenderer tiledMapRenderer;
     
     John john;
-    John josh;
+    Police josh;
     
     SpriteBatch batch;
     
@@ -59,15 +60,15 @@ public class PlayStage extends Stage implements InputProcessor {
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false,w,h);
         camera.update();
-        camera.zoom = 0.44f;
-		tiledMap = new TmxMapLoader().load("maps/TheMaze.tmx");
+        camera.zoom = 0.5f;
+		tiledMap = new TmxMapLoader().load("maps/TheMazeBeta.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		
-		mapW = tiledMap.getProperties().get("width", Integer.class) * 16;
-		mapH = tiledMap.getProperties().get("height", Integer.class) * 16;
+		mapW = tiledMap.getProperties().get("width", Integer.class) * 20;
+		mapH = tiledMap.getProperties().get("height", Integer.class) * 20;
 		
-		john = new John(0, 0).run();
-		josh = new John(0,0).run();
+		john = new John((int)(w/2)+30, (int)h/2).run();
+		josh = new Police((int)(w/2)+30,(int)h/2).run();
 
 		oldJohn = new Vector2(john.getX(), john.getY());
 	}
@@ -94,6 +95,10 @@ public class PlayStage extends Stage implements InputProcessor {
 		boolean isTrap = false;
         MapObjects mapObj = tiledMap.getLayers().get("obj").getObjects();
         MapObjects mapInvi = tiledMap.getLayers().get("invi").getObjects();
+        MapObjects mapW1 = tiledMap.getLayers().get("warp1").getObjects();
+        MapObjects mapW2 = tiledMap.getLayers().get("warp2").getObjects();
+        MapObjects mapW3 = tiledMap.getLayers().get("warp3").getObjects();
+        MapObjects mapW4 = tiledMap.getLayers().get("warp4").getObjects();
         
         sr.setAutoShapeType(true);
     	sr.begin();
@@ -120,7 +125,87 @@ public class PlayStage extends Stage implements InputProcessor {
         	//}
 
         }
-        //check hide
+        //check Wrap1
+        for(int i = 0; i< mapW1.getCount(); i++) {
+        	float x = mapW1.get(i).getProperties().get("x", Float.class);
+        	float y = mapW1.get(i).getProperties().get("y", Float.class);
+        	float w = mapW1.get(i).getProperties().get("width", Float.class);
+        	float h = mapW1.get(i).getProperties().get("height", Float.class);
+	        	Rectangle rect = new Rectangle(x, y, w, h);
+	        	
+	        	sr.rect(rect.x, rect.y, rect.width, rect.height);
+	        	
+	        	if (rect.overlaps(new Rectangle(john.getX(), john.getY(), john.rWidth, john.rHeight))) {
+	        		
+	        		john.setX((1206) );
+	        		john.setY((338)); 
+	        		 break;
+	        	}
+	        	//System.out.println("Test");
+        	//}
+
+        }
+      //check Wrap3
+        for(int i = 0; i< mapW1.getCount(); i++) {
+        	float x = mapW3.get(i).getProperties().get("x", Float.class);
+        	float y = mapW3.get(i).getProperties().get("y", Float.class);
+        	float w = mapW3.get(i).getProperties().get("width", Float.class);
+        	float h = mapW3.get(i).getProperties().get("height", Float.class);
+	        	Rectangle rect = new Rectangle(x, y, w, h);
+	        	
+	        	sr.rect(rect.x, rect.y, rect.width, rect.height);
+	        	
+	        	if (rect.overlaps(new Rectangle(john.getX(), john.getY(), john.rWidth, john.rHeight))) {
+	        		
+	        		john.setX((5) );
+	        		john.setY((324)); 
+	        		 break;
+	        	}
+	        	//System.out.println("Test");
+        	//}
+
+        }
+      //check Wrap2
+        for(int i = 0; i< mapW1.getCount(); i++) {
+        	float x = mapW2.get(i).getProperties().get("x", Float.class);
+        	float y = mapW2.get(i).getProperties().get("y", Float.class);
+        	float w = mapW2.get(i).getProperties().get("width", Float.class);
+        	float h = mapW2.get(i).getProperties().get("height", Float.class);
+	        	Rectangle rect = new Rectangle(x, y, w, h);
+	        	
+	        	sr.rect(rect.x, rect.y, rect.width, rect.height);
+	        	
+	        	if (rect.overlaps(new Rectangle(john.getX(), john.getY(), john.rWidth, john.rHeight))) {
+	        		
+	        		john.setX((603) );
+	        		john.setY((12)); 
+	        		 break;
+	        	}
+	        	//System.out.println("Test");
+        	//}
+
+        }
+      //check Wrap4
+        for(int i = 0; i< mapW1.getCount(); i++) {
+        	float x = mapW4.get(i).getProperties().get("x", Float.class);
+        	float y = mapW4.get(i).getProperties().get("y", Float.class);
+        	float w = mapW4.get(i).getProperties().get("width", Float.class);
+        	float h = mapW4.get(i).getProperties().get("height", Float.class);
+	        	Rectangle rect = new Rectangle(x, y, w, h);
+	        	
+	        	sr.rect(rect.x, rect.y, rect.width, rect.height);
+	        	
+	        	if (rect.overlaps(new Rectangle(john.getX(), john.getY(), john.rWidth, john.rHeight))) {
+	        		
+	        		john.setX((603) );
+	        		john.setY((618)); 
+	        		 break;
+	        	}
+	        	//System.out.println("Test");
+        	//}
+
+        }
+      //check hide
         for(int i = 0; i< mapInvi.getCount(); i++) {
         	float x = mapInvi.get(i).getProperties().get("x", Float.class);
         	float y = mapInvi.get(i).getProperties().get("y", Float.class);
@@ -228,7 +313,10 @@ public class PlayStage extends Stage implements InputProcessor {
       		batch.draw(josh, josh.getX(), josh.getY(),josh.rWidth,josh.rHeight);
       		batch.end();
         moveScreen();
-        updateCamera();
+        //updateCamera();
+        camera.position.x = john.getX();
+        camera.position.y = john.getY();
+        System.out.println(john.getX()+" "+john.getY());
 	}
 
 	@Override
@@ -354,6 +442,7 @@ public class PlayStage extends Stage implements InputProcessor {
 		posX = Gdx.input.getX();
         posY = Gdx.input.getY();
 		return false;
+		
 	}
 
 	@Override
