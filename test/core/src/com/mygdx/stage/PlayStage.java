@@ -42,6 +42,9 @@ public class PlayStage extends Stage implements InputProcessor {
 
 	int speed = 2;
 	
+	//Player Status for Packaging Network Data
+	boolean dead = false;
+	boolean buf = false;
 	
 	public PlayStage(GameStageManage gsm) {
 		super(gsm);
