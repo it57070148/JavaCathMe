@@ -11,8 +11,8 @@ public class Police extends Texture{
 	Task run;
 	SpriteBatch batch;
 	
-	public int rWidth = 12;
-	public int rHeight = 12;
+	public int rWidth = 16;
+	public int rHeight = 16;
 	
 	int chkPic = 0;
 	int x, y;
@@ -67,10 +67,12 @@ public class Police extends Texture{
 					chkPic = 0;
 				}
 				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/invi8.png"), null, false));
+				System.out.println("d");
 			}
 			else{
 				chkPic++;
 				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/invi7.png"), null, false));
+				System.out.println("d");
 			}
 			chkPic++;
 			;}		
@@ -80,10 +82,12 @@ public class Police extends Texture{
 					chkPic = 0;
 				}
 				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/8.png"), null, false));
+				System.out.println("d");
 			}
 			else{
 				chkPic++;
 				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/7.png"), null, false));
+				System.out.println("d");
 			}
 			chkPic++;
 			;}
@@ -97,10 +101,12 @@ public class Police extends Texture{
 					chkPic = 0;
 				}
 				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/invi4.png"), null, false));
+				System.out.println("a");
 			}
 			else{
 				chkPic++;
 				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/invi6.png"), null, false));
+				System.out.println("a");
 			}
 			chkPic++;
 			;}
@@ -112,10 +118,12 @@ public class Police extends Texture{
 					chkPic = 0;
 				}
 				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/4.png"), null, false));
+				System.out.println("a");
 			}
 			else{
 				chkPic++;
 				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/6.png"), null, false));
+				System.out.println("a");
 			}
 			chkPic++;
 			;}
@@ -127,11 +135,13 @@ public class Police extends Texture{
 				if(chkPic > 20){
 					chkPic = 0;
 				}
-				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/invi11.png"), null, false));
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/invi10.png"), null, false));
+				System.out.println("w");
 			}
 			else{
 				chkPic++;
-				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/invi12.png"), null, false));
+				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/invi11.png"), null, false));
+				System.out.println("w");
 			}
 			chkPic++;
 			;}		
@@ -142,10 +152,12 @@ public class Police extends Texture{
 					chkPic = 0;
 				}
 				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/11.png"), null, false));
+				System.out.println("w");
 			}
 			else{
 				chkPic++;
 				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/12.png"), null, false));
+				System.out.println("w");
 			}
 			chkPic++;
 			;}
@@ -157,10 +169,12 @@ public class Police extends Texture{
 					chkPic = 0;
 				}
 				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/invi2.png"), null, false));
+				System.out.println("s");
 			}
 			else{
 				chkPic++;
 				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/invi3.png"), null, false));
+				System.out.println("s");
 			}
 			chkPic++;
 			;}
@@ -172,10 +186,12 @@ public class Police extends Texture{
 					chkPic = 0;
 				}
 				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/2.png"), null, false));
+				System.out.println("s");
 			}
 			else{
 				chkPic++;
 				super.load(TextureData.Factory.loadFromFile(Gdx.files.internal("Police/3.png"), null, false));
+				System.out.println("s");
 			}
 			chkPic++;
 			;}

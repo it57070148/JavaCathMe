@@ -7,6 +7,8 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -30,11 +32,11 @@ public class PlayStage extends Stage implements InputProcessor {
     
     John john;
     Police josh;
-    
+    Pixmap pix; 
     SpriteBatch batch;
     
     Vector2 oldJohn;
-	//Vector2 oldJosh;
+	Vector2 oldJosh;
 	
 	ShapeRenderer sr;
 	Music mainMusic;
@@ -71,11 +73,12 @@ public class PlayStage extends Stage implements InputProcessor {
 		josh = new Police((int)(w/2)+30,(int)h/2).run();
 
 		oldJohn = new Vector2(john.getX(), john.getY());
+		oldJosh = new Vector2(josh.getX(), josh.getY());
 	}
 
 	@Override
 	public void create() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -121,6 +124,12 @@ public class PlayStage extends Stage implements InputProcessor {
 	        		john.setY((int) oldJohn.y); 
 	        		// break;
 	        	}
+	        	if (rect.overlaps(new Rectangle(josh.getX(), josh.getY(), josh.rWidth, josh.rHeight))) {
+	        		isColl = true;
+	        		josh.setX((int) oldJosh.x);
+	        		josh.setY((int) oldJosh.y); 
+	        		// break;
+	        	}
 	        	//System.out.println("Test");
         	//}
 
@@ -137,16 +146,23 @@ public class PlayStage extends Stage implements InputProcessor {
 	        	
 	        	if (rect.overlaps(new Rectangle(john.getX(), john.getY(), john.rWidth, john.rHeight))) {
 	        		
-	        		john.setX((1206) );
-	        		john.setY((338)); 
+	        		john.setX((1195) );
+	        		john.setY((328)); 
 	        		 break;
 	        	}
+	        	if (rect.overlaps(new Rectangle(josh.getX(), josh.getY(), josh.rWidth, josh.rHeight))) {
+	        		
+	        		josh.setX((1195) );
+	        		josh.setY((328)); 
+	        		 break;
+	        	}
+
 	        	//System.out.println("Test");
         	//}
 
         }
       //check Wrap3
-        for(int i = 0; i< mapW1.getCount(); i++) {
+        for(int i = 0; i< mapW3.getCount(); i++) {
         	float x = mapW3.get(i).getProperties().get("x", Float.class);
         	float y = mapW3.get(i).getProperties().get("y", Float.class);
         	float w = mapW3.get(i).getProperties().get("width", Float.class);
@@ -161,12 +177,18 @@ public class PlayStage extends Stage implements InputProcessor {
 	        		john.setY((324)); 
 	        		 break;
 	        	}
+	        	if (rect.overlaps(new Rectangle(josh.getX(), josh.getY(), josh.rWidth, josh.rHeight))) {
+	        		
+	        		josh.setX((5) );
+	        		josh.setY((324)); 
+	        		 break;
+	        	}
 	        	//System.out.println("Test");
         	//}
 
         }
       //check Wrap2
-        for(int i = 0; i< mapW1.getCount(); i++) {
+        for(int i = 0; i< mapW2.getCount(); i++) {
         	float x = mapW2.get(i).getProperties().get("x", Float.class);
         	float y = mapW2.get(i).getProperties().get("y", Float.class);
         	float w = mapW2.get(i).getProperties().get("width", Float.class);
@@ -181,12 +203,18 @@ public class PlayStage extends Stage implements InputProcessor {
 	        		john.setY((12)); 
 	        		 break;
 	        	}
+	        	if (rect.overlaps(new Rectangle(josh.getX(), josh.getY(), josh.rWidth, josh.rHeight))) {
+	        		
+	        		josh.setX((603) );
+	        		josh.setY((12)); 
+	        		 break;
+	        	}
 	        	//System.out.println("Test");
         	//}
 
         }
       //check Wrap4
-        for(int i = 0; i< mapW1.getCount(); i++) {
+        for(int i = 0; i< mapW4.getCount(); i++) {
         	float x = mapW4.get(i).getProperties().get("x", Float.class);
         	float y = mapW4.get(i).getProperties().get("y", Float.class);
         	float w = mapW4.get(i).getProperties().get("width", Float.class);
@@ -201,21 +229,34 @@ public class PlayStage extends Stage implements InputProcessor {
 	        		john.setY((618)); 
 	        		 break;
 	        	}
+	        	if (rect.overlaps(new Rectangle(josh.getX(), josh.getY(), josh.rWidth, josh.rHeight))) {
+	        		
+	        		josh.setX((603) );
+	        		josh.setY((618)); 
+	        		 break;
+	        	
 	        	//System.out.println("Test");
         	//}
 
         }
+        }
       //check hide
-        for(int i = 0; i< mapInvi.getCount(); i++) {
-        	float x = mapInvi.get(i).getProperties().get("x", Float.class);
-        	float y = mapInvi.get(i).getProperties().get("y", Float.class);
-        	float w = mapInvi.get(i).getProperties().get("width", Float.class);
-        	float h = mapInvi.get(i).getProperties().get("height", Float.class);
+        for(int i1 = 0; i1< mapInvi.getCount(); i1++) {
+        	float x = mapInvi.get(i1).getProperties().get("x", Float.class);
+        	float y = mapInvi.get(i1).getProperties().get("y", Float.class);
+        	float w = mapInvi.get(i1).getProperties().get("width", Float.class);
+        	float h = mapInvi.get(i1).getProperties().get("height", Float.class);
 	        	Rectangle rect = new Rectangle(x, y, w, h);
 	        	
 	        	sr.rect(rect.x, rect.y, rect.width, rect.height);
 	        	
 	        	if (rect.overlaps(new Rectangle(john.getX(), john.getY(), john.rWidth, john.rHeight))) {
+	        		isInvi = true;
+	        		//john.setX((int) oldJohn.x);
+	        		//john.setY((int) oldJohn.y); 
+	        		// break;
+	        	}
+	        	if (rect.overlaps(new Rectangle(josh.getX(), josh.getY(), josh.rWidth, josh.rHeight))) {
 	        		isInvi = true;
 	        		//john.setX((int) oldJohn.x);
 	        		//john.setY((int) oldJohn.y); 
@@ -254,6 +295,7 @@ public class PlayStage extends Stage implements InputProcessor {
         sr.rect(john.getX(), john.getY(), john.rWidth, john.rHeight);
         sr.end();
         oldJohn = new Vector2(john.getX(), john.getY());
+        oldJosh = new Vector2(josh.getX(), josh.getY());
         
         
         
@@ -264,7 +306,7 @@ public class PlayStage extends Stage implements InputProcessor {
 						john.chrRight(isInvi); }
 				else if (Gdx.input.isKeyPressed(Keys.D)){
 					josh.plusX(speed);
-					josh.chrDown(isInvi);
+					josh.chrRight(isInvi);
 
 				}
 				
@@ -285,11 +327,11 @@ public class PlayStage extends Stage implements InputProcessor {
 		
 		else if(Gdx.input.isKeyPressed(Keys.A)) {
 			josh.plusX(-speed);
-			josh.chrDown(isInvi);
+			josh.chrLeft(isInvi);
 		}
 		else if(Gdx.input.isKeyPressed(Keys.W)) {
 			josh.plusY(speed);
-			josh.chrDown(isInvi);
+			josh.chrUp(isInvi);
 		}
 		else if(Gdx.input.isKeyPressed(Keys.S)) {
 			josh.plusY(-speed);
@@ -306,7 +348,8 @@ public class PlayStage extends Stage implements InputProcessor {
       			
       			}
       		}
-      	
+      		
+			
       		batch.begin();
       		batch.setProjectionMatrix(camera.combined);
       		batch.draw(john, john.getX(), john.getY(),john.rWidth,john.rHeight);

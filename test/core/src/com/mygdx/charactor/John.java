@@ -12,14 +12,14 @@ public class John extends Texture{
 	Task run;
 	SpriteBatch batch;
 	
-	public int rWidth = 12;
-	public int rHeight = 12;
+	public int rWidth = 16;
+	public int rHeight = 16;
 	
 	int chkPic = 0;
 	int x, y;
 	
 	public John(int x, int y) {
-		super("pika.png");
+		super("theif/Tdown1.png");
 		this.x = x;
 		this.y = y;
 	}
