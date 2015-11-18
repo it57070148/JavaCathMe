@@ -1,17 +1,16 @@
 package com.mygdx.stage;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -21,65 +20,85 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.charactor.John;
+import com.mygdx.charactor.Player;
+import com.mygdx.charactor.PlayerList;
 import com.mygdx.charactor.Police;
+import com.mygdx.game.Game;
+import com.mygdx.game.Game.CharType;
+import com.mygdx.stage.GameStageManage.Level;
+
+import net.catchme.packet.HandCheckPacket;
+import net.catchme.packet.PacketHelper;
+import net.catchme.packet.PacketJoin;
+import net.catchme.packet.PacketMove;
+import net.catchme.packet.PacketThread;
 
 public class PlayStage extends Stage implements InputProcessor {
-	
-	
+
 	TiledMap tiledMap;
-    OrthographicCamera camera;
-    TiledMapRenderer tiledMapRenderer;
-    
-    John john;
-    Police josh;
-    Pixmap pix; 
-    SpriteBatch batch;
-    
-    Vector2 oldJohn;
+	OrthographicCamera camera;
+	TiledMapRenderer tiledMapRenderer;
+
+	John john;
+	Police josh;
+	Pixmap pix;
+	SpriteBatch batch;
+
+	Vector2 oldJohn;
 	Vector2 oldJosh;
-	
+
 	ShapeRenderer sr;
 	Music mainMusic;
 	float posX, posY, w, h;
 	int mapW, mapH;
 
+	private Thread serverThread;
 	int speed = 2;
-	
-	//Player Status for Packaging Network Data
+
+	// Player Status for Packaging Network Data
 	boolean dead = false;
 	boolean buf = false;
-	
+
+	private int type;
+
+	public static Player player;
+	private Vector2 oldPlayer;
+
+	boolean isColl = false;
+	boolean isInvi = false;
+
 	public PlayStage(GameStageManage gsm) {
 		super(gsm);
-	
+
 		sr = new ShapeRenderer();
 		batch = new SpriteBatch();
 		w = Gdx.graphics.getWidth();
-        h = Gdx.graphics.getHeight();
-        posX = w / 2;
-        posY = h / 2;
-        
+		h = Gdx.graphics.getHeight();
+		posX = w / 2;
+		posY = h / 2;
+
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false,w,h);
-        camera.update();
-        camera.zoom = 0.5f;
+		camera.setToOrtho(false, w, h);
+		camera.update();
+		camera.zoom = 0.5f;
 		tiledMap = new TmxMapLoader().load("maps/TheMazeBeta.tmx");
 		tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
-		
+
 		mapW = tiledMap.getProperties().get("width", Integer.class) * 20;
 		mapH = tiledMap.getProperties().get("height", Integer.class) * 20;
+		if (Game.getCharType(Game.type) == Game.CharType.POLICE) {
+			player = new Police((int) (w / 2) + 30, (int) h / 2);
+		} else {
+			player = new John((int) (w / 2) + 30, (int) h / 2);
+		}
+		oldPlayer = new Vector2(player.getX(), player.getY());
 		
-		john = new John((int)(w/2)+30, (int)h/2).run();
-		josh = new Police((int)(w/2)+30,(int)h/2).run();
-
-		oldJohn = new Vector2(john.getX(), john.getY());
-		oldJosh = new Vector2(josh.getX(), josh.getY());
+		
 	}
 
 	@Override
 	public void create() {
-		
-		
+
 	}
 
 	@Override
@@ -87,330 +106,127 @@ public class PlayStage extends Stage implements InputProcessor {
 		
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		if (Game.timeRemain < 0) {
+			System.out.println(Game.timeRemain);
+			this.gsm.setStage(Level.RESULT);
+			return;
+		}
 		camera.update();
-        tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render();
-		boolean isColl = false;
-		boolean isInvi = false;
-		boolean isTrap = false;
-        MapObjects mapObj = tiledMap.getLayers().get("obj").getObjects();
-        MapObjects mapInvi = tiledMap.getLayers().get("invi").getObjects();
-        MapObjects mapW1 = tiledMap.getLayers().get("warp1").getObjects();
-        MapObjects mapW2 = tiledMap.getLayers().get("warp2").getObjects();
-        MapObjects mapW3 = tiledMap.getLayers().get("warp3").getObjects();
-        MapObjects mapW4 = tiledMap.getLayers().get("warp4").getObjects();
-        
-        sr.setAutoShapeType(true);
-    	sr.begin();
-    	sr.setColor(1, 0, 0, 1);
-    	sr.setProjectionMatrix(camera.combined);
-        for(int i = 0; i< mapObj.getCount(); i++) {
-        	float x = mapObj.get(i).getProperties().get("x", Float.class);
-        	float y = mapObj.get(i).getProperties().get("y", Float.class);
-        	float w = mapObj.get(i).getProperties().get("width", Float.class);
-        	float h = mapObj.get(i).getProperties().get("height", Float.class);
-        	//if (mapObj.get(i) instanceof RectangleMapObject) {
-        		//RectangleMapObject obj = (RectangleMapObject) mapObj.get(i);
-	        	Rectangle rect = new Rectangle(x, y , w, h);
-	        	
-	        	sr.rect(rect.x, rect.y, rect.width, rect.height);
-	        	
-	        	if (rect.overlaps(new Rectangle(john.getX(), john.getY(), john.rWidth, john.rHeight))) {
-	        		isColl = true;
-	        		john.setX((int) oldJohn.x);
-	        		john.setY((int) oldJohn.y); 
-	        		// break;
-	        	}
-	        	if (rect.overlaps(new Rectangle(josh.getX(), josh.getY(), josh.rWidth, josh.rHeight))) {
-	        		isColl = true;
-	        		josh.setX((int) oldJosh.x);
-	        		josh.setY((int) oldJosh.y); 
-	        		// break;
-	        	}
-	        	//System.out.println("Test");
-        	//}
+		tiledMapRenderer.setView(camera);
+		tiledMapRenderer.render();
 
-        }
-        //check Wrap1
-        for(int i = 0; i< mapW1.getCount(); i++) {
-        	float x = mapW1.get(i).getProperties().get("x", Float.class);
-        	float y = mapW1.get(i).getProperties().get("y", Float.class);
-        	float w = mapW1.get(i).getProperties().get("width", Float.class);
-        	float h = mapW1.get(i).getProperties().get("height", Float.class);
-	        	Rectangle rect = new Rectangle(x, y, w, h);
-	        	
-	        	sr.rect(rect.x, rect.y, rect.width, rect.height);
-	        	
-	        	if (rect.overlaps(new Rectangle(john.getX(), john.getY(), john.rWidth, john.rHeight))) {
-	        		
-	        		john.setX((1195) );
-	        		john.setY((328)); 
-	        		 break;
-	        	}
-	        	if (rect.overlaps(new Rectangle(josh.getX(), josh.getY(), josh.rWidth, josh.rHeight))) {
-	        		
-	        		josh.setX((1195) );
-	        		josh.setY((328)); 
-	        		 break;
-	        	}
+		isColl = false;
+		isInvi = false;
 
-	        	//System.out.println("Test");
-        	//}
+		//check(player);
+		sr.setAutoShapeType(true);
+		sr.begin();
+		sr.setColor(1, 0, 0, 1);
+		sr.setProjectionMatrix(camera.combined);
 
-        }
-      //check Wrap3
-        for(int i = 0; i< mapW3.getCount(); i++) {
-        	float x = mapW3.get(i).getProperties().get("x", Float.class);
-        	float y = mapW3.get(i).getProperties().get("y", Float.class);
-        	float w = mapW3.get(i).getProperties().get("width", Float.class);
-        	float h = mapW3.get(i).getProperties().get("height", Float.class);
-	        	Rectangle rect = new Rectangle(x, y, w, h);
-	        	
-	        	sr.rect(rect.x, rect.y, rect.width, rect.height);
-	        	
-	        	if (rect.overlaps(new Rectangle(john.getX(), john.getY(), john.rWidth, john.rHeight))) {
-	        		
-	        		john.setX((5) );
-	        		john.setY((324)); 
-	        		 break;
-	        	}
-	        	if (rect.overlaps(new Rectangle(josh.getX(), josh.getY(), josh.rWidth, josh.rHeight))) {
-	        		
-	        		josh.setX((5) );
-	        		josh.setY((324)); 
-	        		 break;
-	        	}
-	        	//System.out.println("Test");
-        	//}
+		sr.end();
+		sr.begin();
+		sr.rect(player.getX(), player.getY(), player.getrHeight(), player.getrHeight());
+		sr.end();
+		check(player);
+		if (!isColl) {
+			oldPlayer.set(player.getX(), player.getY());
+			if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+				player.plusX(speed);
+				player.chrRight(isInvi);
 
-        }
-      //check Wrap2
-        for(int i = 0; i< mapW2.getCount(); i++) {
-        	float x = mapW2.get(i).getProperties().get("x", Float.class);
-        	float y = mapW2.get(i).getProperties().get("y", Float.class);
-        	float w = mapW2.get(i).getProperties().get("width", Float.class);
-        	float h = mapW2.get(i).getProperties().get("height", Float.class);
-	        	Rectangle rect = new Rectangle(x, y, w, h);
-	        	
-	        	sr.rect(rect.x, rect.y, rect.width, rect.height);
-	        	
-	        	if (rect.overlaps(new Rectangle(john.getX(), john.getY(), john.rWidth, john.rHeight))) {
-	        		
-	        		john.setX((603) );
-	        		john.setY((12)); 
-	        		 break;
-	        	}
-	        	if (rect.overlaps(new Rectangle(josh.getX(), josh.getY(), josh.rWidth, josh.rHeight))) {
-	        		
-	        		josh.setX((603) );
-	        		josh.setY((12)); 
-	        		 break;
-	        	}
-	        	//System.out.println("Test");
-        	//}
+			} else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+				player.plusX(-speed);
+				player.chrLeft(isInvi);
+			} else if (Gdx.input.isKeyPressed(Keys.UP)) {
+				player.plusY(speed);
+				player.chrUp(isInvi);
 
-        }
-      //check Wrap4
-        for(int i = 0; i< mapW4.getCount(); i++) {
-        	float x = mapW4.get(i).getProperties().get("x", Float.class);
-        	float y = mapW4.get(i).getProperties().get("y", Float.class);
-        	float w = mapW4.get(i).getProperties().get("width", Float.class);
-        	float h = mapW4.get(i).getProperties().get("height", Float.class);
-	        	Rectangle rect = new Rectangle(x, y, w, h);
-	        	
-	        	sr.rect(rect.x, rect.y, rect.width, rect.height);
-	        	
-	        	if (rect.overlaps(new Rectangle(john.getX(), john.getY(), john.rWidth, john.rHeight))) {
-	        		
-	        		john.setX((603) );
-	        		john.setY((618)); 
-	        		 break;
-	        	}
-	        	if (rect.overlaps(new Rectangle(josh.getX(), josh.getY(), josh.rWidth, josh.rHeight))) {
-	        		
-	        		josh.setX((603) );
-	        		josh.setY((618)); 
-	        		 break;
-	        	
-	        	//System.out.println("Test");
-        	//}
-
-        }
-        }
-      //check hide
-        for(int i1 = 0; i1< mapInvi.getCount(); i1++) {
-        	float x = mapInvi.get(i1).getProperties().get("x", Float.class);
-        	float y = mapInvi.get(i1).getProperties().get("y", Float.class);
-        	float w = mapInvi.get(i1).getProperties().get("width", Float.class);
-        	float h = mapInvi.get(i1).getProperties().get("height", Float.class);
-	        	Rectangle rect = new Rectangle(x, y, w, h);
-	        	
-	        	sr.rect(rect.x, rect.y, rect.width, rect.height);
-	        	
-	        	if (rect.overlaps(new Rectangle(john.getX(), john.getY(), john.rWidth, john.rHeight))) {
-	        		isInvi = true;
-	        		//john.setX((int) oldJohn.x);
-	        		//john.setY((int) oldJohn.y); 
-	        		// break;
-	        	}
-	        	if (rect.overlaps(new Rectangle(josh.getX(), josh.getY(), josh.rWidth, josh.rHeight))) {
-	        		isInvi = true;
-	        		//john.setX((int) oldJohn.x);
-	        		//john.setY((int) oldJohn.y); 
-	        		// break;
-	        	}
-	        	//System.out.println("Test");
-        	//}
-
-        }
-        //Cheak Trap
-      //check hide
-       // for(int i = 0; i< mapCatch.getCount(); i++) {
-        //	float x = mapCatch.get(i).getProperties().get("x", Float.class);
-        	//float y = mapCatch.get(i).getProperties().get("y", Float.class);
-        	//float w = mapCatch.get(i).getProperties().get("width", Float.class);
-        	//float h = mapCatch.get(i).getProperties().get("height", Float.class);
-	        //	Rectangle rect = new Rectangle(x, y, w, h);
-	        	
-	        	//sr.rect(rect.x, rect.y, rect.width, rect.height);
-	        	
-	        	//if (rect.overlaps(new Rectangle(john.getX(), john.getY(), john.rWidth, john.rHeight))) {
-	        		//isTrap = true;
-	        		//john.chrCatch();
-	        		
-	        		
-	        		
-	        		// break;
-	        	//}
-	        	//System.out.println("Test");
-        	//}
-
-        //}
-        
-        sr.end();
-        sr.begin();
-        sr.rect(john.getX(), john.getY(), john.rWidth, john.rHeight);
-        sr.end();
-        oldJohn = new Vector2(john.getX(), john.getY());
-        oldJosh = new Vector2(josh.getX(), josh.getY());
-        
-        
-        
-        if (!isColl) {
-			if(Gdx.input.isKeyPressed(Keys.RIGHT) || Gdx.input.isKeyPressed(Keys.D)) {
-				if(Gdx.input.isKeyPressed(Keys.RIGHT)){
-						john.plusX(speed);
-						john.chrRight(isInvi); }
-				else if (Gdx.input.isKeyPressed(Keys.D)){
-					josh.plusX(speed);
-					josh.chrRight(isInvi);
-
-				}
-				
+			} else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+				player.plusY(-speed);
+				player.chrDown(isInvi);
 			}
-		else if(Gdx.input.isKeyPressed(Keys.LEFT)) {
-				john.plusX(-speed);
-				john.chrLeft(isInvi);
-			}
-		else if(Gdx.input.isKeyPressed(Keys.UP)) {
-				john.plusY(speed);
-				john.chrUp(isInvi);
-			
-			}
-		else if(Gdx.input.isKeyPressed(Keys.DOWN)) {
-				john.plusY(-speed);
-				john.chrDown(isInvi);
-			}
-		
-		else if(Gdx.input.isKeyPressed(Keys.A)) {
-			josh.plusX(-speed);
-			josh.chrLeft(isInvi);
-		}
-		else if(Gdx.input.isKeyPressed(Keys.W)) {
-			josh.plusY(speed);
-			josh.chrUp(isInvi);
-		}
-		else if(Gdx.input.isKeyPressed(Keys.S)) {
-			josh.plusY(-speed);
-			josh.chrDown(isInvi);
+
 		}
 		
-        }
-      //Cath Detection
-      		if(josh.getX() == john.getX() && john.getY() == josh.getY()){
-      			if(Gdx.input.isKeyJustPressed(Keys.C)){
-      				
-      			josh.setX(50);
-      			josh.setY(50);
-      			
-      			}
-      		}
-      		
-			
-      		batch.begin();
-      		batch.setProjectionMatrix(camera.combined);
-      		batch.draw(john, john.getX(), john.getY(),john.rWidth,john.rHeight);
-      		batch.draw(josh, josh.getX(), josh.getY(),josh.rWidth,josh.rHeight);
-      		batch.end();
-        moveScreen();
-        //updateCamera();
-        camera.position.x = john.getX();
-        camera.position.y = john.getY();
-        System.out.println(john.getX()+" "+john.getY());
+		if (Game.getCharType(Game.type) == CharType.POLICE &&Gdx.input.isKeyJustPressed(Keys.C)) {
+			PlayerList.checkCatch(player);
+		}
+		
+
+
+		batch.begin();
+		batch.setProjectionMatrix(camera.combined);
+		batch.draw(player.getTexture(), player.getX(), player.getY(), player.getrHeight(), player.getrHeight());
+		batch.end();
+		PlayerList.draw(batch, camera.combined, player);
+		moveScreen();
+		// updateCamera();
+		camera.position.x = player.getX();
+		camera.position.y = player.getY();
+		
+		int invi = player.getInvi() ? 1 : 0;
+
+		PacketHelper.sendPacket(new PacketMove(Game.clientId, Game.type, player.getX(), player.getY(), player.getDirection(), invi));
+	
+		
 	}
 
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public void moveScreen() {
-		if(Gdx.input.isTouched() || !Gdx.input.isCursorCatched())
+		if (Gdx.input.isTouched() || !Gdx.input.isCursorCatched()) {
 			return;
-		if(posX < 32) {
+		}
+		if (posX < 32) {
 			camera.translate(-16, 0);
 		}
-		if(posX > w - 32) {
+		if (posX > w - 32) {
 			camera.translate(16, 0);
 		}
-		if(posY < 32) {
+		if (posY < 32) {
 			camera.translate(0, 16);
 		}
-		if(posY > h - 32) {
+		if (posY > h - 32) {
 			camera.translate(0, -16);
 		}
 	}
-	
+
 	public void updateCamera() {
-	
-		
-		if(camera.position.x > mapW - w / 2)
+
+		if (camera.position.x > mapW - w / 2) {
 			camera.position.x = john.getX();
-		if(camera.position.y > mapH - h / 2)
+		}
+		if (camera.position.y > mapH - h / 2) {
 			camera.position.y = john.getY();
-		if(camera.position.x < w / 2)
+		}
+		if (camera.position.x < w / 2) {
 			camera.position.x = john.getX();
-		if(camera.position.y < h / 2)
+		}
+		if (camera.position.y < h / 2) {
 			camera.position.y = john.getY();
-		
+		}
+
 	}
-	
+
 	@Override
 	public boolean keyDown(int keycode) {
-		if(keycode == Keys.PLUS)
+		if (keycode == Keys.PLUS) {
 			speed++;
-		else if(keycode == Keys.MINUS)
+		} else if (keycode == Keys.MINUS) {
 			speed--;
-		if(keycode == Keys.ESCAPE) {
-			Gdx.input.setCursorCatched(!Gdx.input.isCursorCatched());
-			Gdx.input.setCursorPosition((int)posX, (int)posY);
 		}
-		if(speed <= 0)
+		if (keycode == Keys.ESCAPE) {
+			Gdx.input.setCursorCatched(!Gdx.input.isCursorCatched());
+			Gdx.input.setCursorPosition((int) posX, (int) posY);
+		}
+		if (speed <= 0) {
 			speed = 1;
+		}
 		return true;
 	}
 
@@ -428,64 +244,60 @@ public class PlayStage extends Stage implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if(!Gdx.input.isCursorCatched())
+		if (!Gdx.input.isCursorCatched()) {
 			Gdx.input.setCursorCatched(true);
+		}
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		if(button == Buttons.RIGHT)
-			john.toggle();
+
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		if(!Gdx.input.isCursorCatched())
+		if (!Gdx.input.isCursorCatched()) {
 			return false;
-		camera.translate(posX-screenX, -(posY-screenY));
-		//fixOverFlow();
+		}
+		camera.translate(posX - screenX, -(posY - screenY));
+		// fixOverFlow();
 		/*
-		if(screenX < 0)
-			Gdx.input.setCursorPosition(0, screenY);
-		if(screenY < mouse.getHeight())
-			Gdx.input.setCursorPosition(screenX, mouse.getHeight());
-		if(screenX > w - mouse.getWidth())
-			Gdx.input.setCursorPosition((int) (w - mouse.getWidth()), screenY);
-		if(screenY > h )
-			Gdx.input.setCursorPosition(screenX, (int) h);
-			*/
+		 * if(screenX < 0) Gdx.input.setCursorPosition(0, screenY); if(screenY <
+		 * mouse.getHeight()) Gdx.input.setCursorPosition(screenX,
+		 * mouse.getHeight()); if(screenX > w - mouse.getWidth())
+		 * Gdx.input.setCursorPosition((int) (w - mouse.getWidth()), screenY);
+		 * if(screenY > h ) Gdx.input.setCursorPosition(screenX, (int) h);
+		 */
 		posX = Gdx.input.getX();
-        posY = Gdx.input.getY();
+		posY = Gdx.input.getY();
 		return false;
 	}
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
 		posX = Gdx.input.getX();
-        posY = Gdx.input.getY();
-		if(!Gdx.input.isCursorCatched())
+		posY = Gdx.input.getY();
+		if (!Gdx.input.isCursorCatched()) {
 			return false;
+		}
 		Vector3 touchPos = new Vector3();
-        touchPos.set(Gdx.input.getX() , Gdx.input.getY(), 0);
-        camera.unproject(touchPos);
-        
-        
-        /*
-		if(screenX < 0)
-			Gdx.input.setCursorPosition(0, Gdx.input.getY());
-		if(screenY < mouse.getHeight())
-			Gdx.input.setCursorPosition(Gdx.input.getX(), mouse.getHeight());
-		if(screenX > w - mouse.getWidth())
-			Gdx.input.setCursorPosition((int) (w - mouse.getWidth()), Gdx.input.getY());
-		if(screenY > h )
-			Gdx.input.setCursorPosition(Gdx.input.getX(), (int) h);
-		*/
+		touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+		camera.unproject(touchPos);
+
+		/*
+		 * if(screenX < 0) Gdx.input.setCursorPosition(0, Gdx.input.getY());
+		 * if(screenY < mouse.getHeight())
+		 * Gdx.input.setCursorPosition(Gdx.input.getX(), mouse.getHeight());
+		 * if(screenX > w - mouse.getWidth()) Gdx.input.setCursorPosition((int)
+		 * (w - mouse.getWidth()), Gdx.input.getY()); if(screenY > h )
+		 * Gdx.input.setCursorPosition(Gdx.input.getX(), (int) h);
+		 */
 		posX = Gdx.input.getX();
-        posY = Gdx.input.getY();
+		posY = Gdx.input.getY();
 		return false;
-		
+
 	}
 
 	@Override
@@ -495,4 +307,152 @@ public class PlayStage extends Stage implements InputProcessor {
 		return false;
 	}
 
+	public void check(Player p) {
+		checkHide(p);
+		checkObj(p);
+		checkWarp1(p);
+		checkWarp2(p);
+		checkWarp3(p);
+		checkWarp4(p);
+	}
+
+	public void checkWarp1(Player p) {
+		MapObjects mapW1 = tiledMap.getLayers().get("warp1").getObjects();
+
+		// check Wrap1
+		for (int i = 0; i < mapW1.getCount(); i++) {
+			float x = mapW1.get(i).getProperties().get("x", Float.class);
+			float y = mapW1.get(i).getProperties().get("y", Float.class);
+			float w = mapW1.get(i).getProperties().get("width", Float.class);
+			float h = mapW1.get(i).getProperties().get("height", Float.class);
+			Rectangle rect = new Rectangle(x, y, w, h);
+
+			// sr.rect(rect.x, rect.y, rect.width, rect.height);
+
+			if (rect.overlaps(new Rectangle(p.getX(), p.getY(), p.getrWidth(), p.getrHeight()))) {
+
+				p.setX((1195));
+				p.setY((328));
+				break;
+			}
+		}
+	}
+
+	public void checkWarp2(Player p) {
+		MapObjects mapW2 = tiledMap.getLayers().get("warp2").getObjects();
+
+		// check Wrap2
+		for (int i = 0; i < mapW2.getCount(); i++) {
+			float x = mapW2.get(i).getProperties().get("x", Float.class);
+			float y = mapW2.get(i).getProperties().get("y", Float.class);
+			float w = mapW2.get(i).getProperties().get("width", Float.class);
+			float h = mapW2.get(i).getProperties().get("height", Float.class);
+			Rectangle rect = new Rectangle(x, y, w, h);
+
+			// sr.rect(rect.x, rect.y, rect.width, rect.height);
+
+			if (rect.overlaps(new Rectangle(p.getX(), p.getY(), p.getrWidth(), p.getrHeight()))) {
+
+				p.setX((603));
+				p.setY((12));
+				break;
+			}
+
+		}
+	}
+
+	public void checkWarp3(Player p) {
+		MapObjects mapW3 = tiledMap.getLayers().get("warp3").getObjects();
+
+		// check Wrap3
+		for (int i = 0; i < mapW3.getCount(); i++) {
+			float x = mapW3.get(i).getProperties().get("x", Float.class);
+			float y = mapW3.get(i).getProperties().get("y", Float.class);
+			float w = mapW3.get(i).getProperties().get("width", Float.class);
+			float h = mapW3.get(i).getProperties().get("height", Float.class);
+			Rectangle rect = new Rectangle(x, y, w, h);
+
+			// sr.rect(rect.x, rect.y, rect.width, rect.height);
+
+			if (rect.overlaps(new Rectangle(p.getX(), p.getY(), p.getrWidth(), p.getrHeight()))) {
+
+				p.setX((5));
+				p.setY((324));
+				break;
+			}
+		}
+	}
+
+	public void checkWarp4(Player p) {
+		MapObjects mapW4 = tiledMap.getLayers().get("warp4").getObjects();
+
+		// check Wrap4
+		for (int i = 0; i < mapW4.getCount(); i++) {
+			float x = mapW4.get(i).getProperties().get("x", Float.class);
+			float y = mapW4.get(i).getProperties().get("y", Float.class);
+			float w = mapW4.get(i).getProperties().get("width", Float.class);
+			float h = mapW4.get(i).getProperties().get("height", Float.class);
+			Rectangle rect = new Rectangle(x, y, w, h);
+
+			// sr.rect(rect.x, rect.y, rect.width, rect.height);
+
+			if (rect.overlaps(new Rectangle(p.getX(), p.getY(), p.getrWidth(), p.getrHeight()))) {
+
+				p.setX((603));
+				p.setY((618));
+				break;
+			}
+		}
+	}
+
+	public void checkHide(Player p) {
+		MapObjects mapInvi = tiledMap.getLayers().get("invi").getObjects();
+		// check hide
+		for (int i1 = 0; i1 < mapInvi.getCount(); i1++) {
+			float x = mapInvi.get(i1).getProperties().get("x", Float.class);
+			float y = mapInvi.get(i1).getProperties().get("y", Float.class);
+			float w = mapInvi.get(i1).getProperties().get("width", Float.class);
+			float h = mapInvi.get(i1).getProperties().get("height", Float.class);
+			Rectangle rect = new Rectangle(x, y, w, h);
+
+			// sr.rect(rect.x, rect.y, rect.width, rect.height);
+
+			if (rect.overlaps(new Rectangle(p.getX(), p.getY(), p.getrWidth(), p.getrHeight()))) {
+				isInvi = true;
+
+			}
+			
+			sr.begin(ShapeType.Filled);
+			sr.setColor(Color.GOLD);
+			sr.rect(rect.x, rect.y, rect.width, rect.height);
+			sr.end();
+
+		}
+	}
+
+	public void checkObj(Player p) {
+		MapObjects mapObj = tiledMap.getLayers().get("obj").getObjects();
+		for (int i = 0; i < mapObj.getCount(); i++) {
+			float x = mapObj.get(i).getProperties().get("x", Float.class);
+			float y = mapObj.get(i).getProperties().get("y", Float.class);
+			float w = mapObj.get(i).getProperties().get("width", Float.class);
+			float h = mapObj.get(i).getProperties().get("height", Float.class);
+			Rectangle rect = new Rectangle(x, y, w, h);
+
+			// sr.rect(rect.x, rect.y, rect.width, rect.height);
+
+			if (rect.overlaps(new Rectangle(p.getX(), p.getY(), p.getrWidth(), p.getrHeight()))) {
+				isColl = true;
+				p.setX((int) oldPlayer.x);
+				p.setY((int) oldPlayer.y);
+				System.out.println(p.getOldX() + ":" + p.getOldY());
+				// break;
+			}
+			sr.begin(ShapeType.Filled);
+			sr.setColor(Color.BLUE);
+			sr.rect(rect.x, rect.y, rect.width, rect.height);
+			sr.end();
+
+		}
+	}
 }
